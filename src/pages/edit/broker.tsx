@@ -1,9 +1,9 @@
 
-interface BrokerProps {
+interface CampaignProps {
     
 }
 
-const Broker: React.FC<BrokerProps> = () => {
+const Campaign: React.FC<CampaignProps> = () => {
 
   return (
     <div className="">
@@ -12,4 +12,4 @@ const Broker: React.FC<BrokerProps> = () => {
   );
 };
 
-export default Broker;
+export default Campaign;

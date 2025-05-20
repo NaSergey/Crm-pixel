@@ -1,113 +1,68 @@
-import { useEffect, useState } from 'react';
-import { apiRequest } from '../../../services/ApiReq'; // Импортируйте ваш apiRequest
-import Input from '../../ui/select/select';
+import React from 'react';
 import Button from '../../ui/button/button';
+import TextInput from '../../ui/select/textInput';
+import Select from 'react-select';
+import customStyles from '../../../style/reactSelectStyles';
+import { usePartnerData } from '../../../hook/usePartnerData';
+import { useManagersSelect } from '../../../hook/useManagerOptions';
+
 
 const Partner = ({ row, onClose }) => {
-  const [partnerData, setPartnerData] = useState({
-    id: '',
-    name: '',
-    brand_manager: '',
-    comment: '',
-  });
-  const [loading, setLoading] = useState(true);
+  const partnerId = row?.partner;
 
-  useEffect(() => {
-    if (!row?.id) return;
-    
-    console.log('row', row);
-  
-    const params = {
-      select: ['name', 'email', 'role', 'comment', 'partner_token', 'manager', 'leads_display', 'brokers_display', 'partners_display', 'access_to_create_broker'],
-      where: [{ id: row.id }]
-    };
-  
-    apiRequest('/users/get_users/', params) 
-      .then((result) => {
-        if (result && result.success) {
-          console.log('data from server', result.data);
-          setPartnerData(result.data[0]); 
-        } else {
-          console.error('Ошибка получения данных: ', result?.error || 'Неизвестная ошибка');
-        }
-      })
-      .catch((err) => {
-        console.error('Ошибка запроса: ', err);
-      })
-      .finally(() => setLoading(false));
-  }, [row?.id]);
-  
-  
+  const {
+    partnerData,
+    handleChange,
+    handleSelectChange,
+    isLoading,
+    error,
+  } = usePartnerData(partnerId);
 
-  const handleChange = (field) => (e) => {
-    setPartnerData(prev => ({ ...prev, [field]: e.target.value }));
-  };
+  const { data: managers, isLoading: isManagersLoading, error: managersError } = useManagersSelect(); // ← сюда перенеси
 
   const handleSave = () => {
-    // логика сохранения
-  };
-
-  const handleAddLeads = () => {
-    // логика добавления
-  };
-
-  const handleUpdateLeads = () => {
-    // логика обновления
+    console.log('Сохраняем:', partnerData);
   };
 
   const handleDelete = () => {
-    // логика удаления
+    console.log('Удаление');
   };
+
+  if (isLoading || isManagersLoading) return <p>Загрузка...</p>;
+  if (error || managersError) return <p>Ошибка при загрузке данных</p>;
 
   return (
     <div>
-      {loading ? (
-        <p>Загрузка...</p>
-      ) : (
-        <>
-          <h2 className="text-xl font-bold mb-4">Партнёр</h2>
+      <h2 className="text-xl text-center font-bold mb-4">Partner</h2>
+      <div className="grid grid-cols-2 gap-4 pt-5">
+        <TextInput label="Name" value={partnerData.name} onChange={handleChange('name')} />
+        <TextInput label="Email" value={partnerData.email} readOnly />
+        <TextInput label="Comment" value={partnerData.comment} onChange={handleChange('comment')} />
+        <TextInput label="Partner token" value={partnerData.partner_token} readOnly />
 
-          {/* <Input
-            value={partnerData.id}
-            onChange={handleChange('id')}
-            placeholder="Id"
-            disabled
+        <div>
+          <label className="block text-sm text-gray-600 mb-1">Manager</label>
+          <Select
+            styles={customStyles}
+            value={partnerData.manager}
+            onChange={handleSelectChange('manager')}
+            options={managers}
           />
-          <Input
-            value={partnerData.name}
-            onChange={handleChange('name')}
-            placeholder="Name"
-          />
-          <Input
-            value={partnerData.brand_manager}
-            onChange={handleChange('brand_manager')}
-            placeholder="Brand Manager"
-          />
-          <Input
-            value={partnerData.comment}
-            onChange={handleChange('comment')}
-            placeholder="Comment"
-          /> */}
+        </div>
+        <TextInput label="Role" value={partnerData.role} readOnly />
+      </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <Button onClick={handleAddLeads} className="bg-indigo-600 hover:bg-indigo-700">
-              Add leads integration code
-            </Button>
-            <Button onClick={handleUpdateLeads} className="bg-yellow-600 hover:bg-yellow-700">
-              Update leads integration code
-            </Button>
-            <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
-              Save
-            </Button>
-            <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-              Delete
-            </Button>
-          </div>
-
-        </>
-      )}
+      <div className="grid grid-cols-2 gap-3 mt-6">
+        <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
+          Save
+        </Button>
+        <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+          Delete
+        </Button>
+      </div>
     </div>
   );
 };
+
 
 export default Partner;

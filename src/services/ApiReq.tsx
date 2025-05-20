@@ -46,18 +46,17 @@ export async function apiRequest(url: string, body: any = null) {
             if (res.info && res.info.includes('auth undefined')) {
                 console.log('warning', 'Authorization error. Please reload the page or contact support.');
             }
-            console.log(res);
+            console.log('apiRequest', url, res);
             return res;
         } else {
             return handleApiError(url, reqParam);
         }
     } catch (error) {
         console.log('error', `Error: ${error.message}\nURL: ${apidomain}${url}`);
-        return false;
+        throw error;
     }
 }
 
-// Функция для обработки ошибок API-запросов
 async function handleApiError(url: string, reqParam: RequestInit) {
     console.error(`Error with request to ${url}`);
     return false;

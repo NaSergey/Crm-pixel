@@ -1,7 +1,6 @@
-// src/components/Filters.tsx
 import React from "react";
-import Select from "react-select"; // или твой кастомный Select, если есть
-import customStyles from "../../style/reactSelectStyles"; // если у тебя есть стили отдельно
+import Select from "react-select";
+import customStyles from "../../style/reactSelectStyles";
 
 type FiltersProps = {
   selectOptions: Record<string, { label: string; value: string }[]>;
@@ -9,9 +8,21 @@ type FiltersProps = {
 
 const Filters: React.FC<FiltersProps> = ({ selectOptions }) => {
   return (
-    <div className="flex justify-center items-center gap-4 p-4 pt-2">
+    <div className="flex gap-4 p-4 pt-2 px-20">
       {Object.entries(selectOptions).map(([key, options]) => (
-        <Select key={key} options={options} placeholder={key} styles={customStyles} />
+        <div key={key} className="flex-1">
+          <Select
+            options={options}
+            placeholder={key}
+            styles={{
+              ...customStyles,
+              container: (base) => ({
+                ...base,
+                width: "100%",
+              }),
+            }}
+          />
+        </div>
       ))}
     </div>
   );

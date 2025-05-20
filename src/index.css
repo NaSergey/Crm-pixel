@@ -34,7 +34,11 @@ body {
   height: 100%;
   scrollbar-width: none;
 }
-
+input{
+  background-color: #272b30;
+  color: #fff;
+  border: none;
+}
 #root::-webkit-scrollbar {
   display: none;
 }

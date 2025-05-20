@@ -7,10 +7,9 @@ const customStyles = {
     border: "none",
     boxShadow: state.isFocused ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none",
     color: "white",
-    minWidth: "150px",
-    maxWidth: "300px",
+    
     borderRadius: "25px",
-    padding: "4px 12px",
+    padding: "0px 10px",
     transition: "box-shadow 0.2s ease-in-out",
 
   }),
