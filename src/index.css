@@ -51,3 +51,22 @@ input{
 .text-gray-table {
   color: #6f767e !important;
 }
+.skeleton {
+  background-color: #ddd;
+  border-radius: 4px;
+  height: 1em;
+  width: 100%;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #ddd;
+  }
+  50% {
+    background-color: #ccc;
+  }
+  100% {
+    background-color: #ddd;
+  }
+}

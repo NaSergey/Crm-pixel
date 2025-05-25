@@ -5,7 +5,12 @@ interface TextInputProps {
   readOnly?: boolean;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ label, value, onChange, readOnly = false }) => {
+const TextInput: React.FC<TextInputProps> = ({
+  label,
+  value,
+  onChange,
+  readOnly = false,
+}) => {
   const finalLabel = readOnly ? `${label} (no rewrite)` : label;
 
   return (
@@ -16,13 +21,8 @@ const TextInput: React.FC<TextInputProps> = ({ label, value, onChange, readOnly 
         value={value}
         onChange={onChange}
         readOnly={readOnly}
-        className={`
-          w-full rounded-3xl px-3 py-2 
-          ${readOnly ? 'bg-[#272b30]' : ''}
-          focus:outline-none
-          focus:shadow-[0_0_5px_rgba(255,255,255,0.5)]
-          transition-shadow duration-200 ease-in-out
-        `}
+        className={`w-full rounded-3xl px-3 py-2 transition-shadow duration-200 ease-in-out focus:outline-none focus:shadow-[0_0_5px_rgba(255,255,255,0.5)]`}
+        style={{color: readOnly ? '#787878' : '#fff'}}
       />
     </div>
   );

@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   className = "",
   type = "button",
 }) => {
-  const base = "rounded font-medium focus:outline-none transition";
+  const base = "rounded-4xl font-medium focus:outline-none transition";
 
   const sizes = {
     sm: "text-sm px-3 py-1.5",
@@ -28,12 +28,15 @@ const Button: React.FC<ButtonProps> = ({
     lg: "text-lg px-5 py-3",
   };
 
-  const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-gray-600 text-white hover:bg-gray-700",
-    danger: "bg-red-600 text-white hover:bg-red-700",
-    outline: "border border-gray-600 text-gray-800 hover:bg-gray-100",
-  };
+const variants = {
+  primary: "bg-blue-600 text-white hover:bg-blue-700",
+  secondary: "bg-gray-600 text-white hover:bg-gray-700",
+  danger: "bg-red-600  text-white hover:bg-red-700",
+  outline: "border border-gray-600 text-gray-800 hover:bg-gray-100",
+  green: "bg-green-600 text-white hover:bg-green-700",
+  emerald: "bg-emerald-600 text-white hover:bg-emerald-700",
+};
+
 
   const disabledStyle = "opacity-50 cursor-not-allowed";
 

@@ -1,7 +1,6 @@
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Импорт стилей
+import 'react-toastify/dist/ReactToastify.css';
 
-// Ваш код компонента
 export function notySend(type:any = null, text:any) {
     let toastOption:any = {
         position: "top-right",
@@ -30,12 +29,10 @@ export function notySend(type:any = null, text:any) {
     }
 }
 
-// В вашем компоненте также нужно добавить <ToastContainer />:
 export default function App() {
   return (
     <div>
       <ToastContainer />
-      {/* Остальная часть компонента */}
     </div>
   );
 }

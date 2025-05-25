@@ -1,6 +1,5 @@
-// utils/useApiQuery.ts
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { apiRequest } from './ApiReq'; // путь до твоего apiRequest
+import { apiRequest } from './ApiReq'; 
 
 export function useApiQuery<T = any>(
   url: string,

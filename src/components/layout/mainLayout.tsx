@@ -15,9 +15,7 @@ function MainLayout() {
   return (
     <div className="flex flex-col h-screen">
       <Header panelState={panelState} togglePanelState={togglePanelState} />
-      
       <Navigation panelState={panelState} />
-
       <main className="flex-grow p-2 pt-[10px]">
         <Outlet />
       </main>

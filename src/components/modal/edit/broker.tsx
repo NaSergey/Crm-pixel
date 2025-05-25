@@ -1,137 +1,66 @@
-import { useEffect, useState } from 'react';
-import { apiRequest } from '../../../services/ApiReq'; // Импорт вашего apiRequest
-import Input from '../../ui/select/select';
+import React from 'react';
 import Button from '../../ui/button/button';
+import TextInput from '../../ui/select/textInput';
+import Select from 'react-select';
+import customStyles from '../../../style/reactSelectStyles';
+import { useBrokerData } from '../../../hook/useBrokerData';
+import { usePartnerData } from '../../../hook/usePartnerData';
 
-const defaultManager = {
-  label: 'select',
-  value: null,
-  leads_display: 'full',
-  brokers_display: 'all',
-  partners_display: 'all',
-  access_to_create_broker: '0',
-};
+const Broker = ({ row, onClose }: { row: any; onClose: () => void }) => {
+  const brokerId = row?.broker;
+  // Получаем бренд-менеджеров
+  const {
+    managers: brandManagers,
+    isLoading: isManagersLoading,
+    error: managersError,
+  } = usePartnerData(null, undefined, ['PartnerManagers'], 'brand manager');
 
-const Partner = ({ row, onClose }) => {
-  const [partnerData, setPartnerData] = useState({
-    name: '',
-    email: '',
-    role: '',
-    comment: '',
-    partner_token: '',
-    manager: defaultManager,
-    leads_display: 'full',
-    brokers_display: 'all',
-    partners_display: 'all',
-    access_to_create_broker: '0',
-  });
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!row?.partner) return;
+const {
+  brokerData,
+  handleChange,
+  handleSelectChange,
+  isLoading: isBrokerLoading,
+  error: brokerError,
+  handleSave,
+  handleDelete,
+} = useBrokerData(brokerId, onClose, ['BrokerData']);
 
-    const params = {
-      select: [
-        'name',
-        'email',
-        'role',
-        'comment',
-        'partner_token',
-        'manager',
-        'leads_display',
-        'brokers_display',
-        'partners_display',
-        'access_to_create_broker',
-      ],
-      where: [{ id: row.partner }],
-    };
 
-    apiRequest('/users/get_users/', params)
-      .then((result) => {
-        if (result && result.success && result.data?.length) {
-          const data = result.data[0];
-          setPartnerData({
-            ...data,
-            manager: data.manager || defaultManager,
-          });
-        } else {
-          console.error('Ошибка получения данных: ', result?.error || 'Неизвестная ошибка');
-        }
-      })
-      .catch((err) => {
-        console.error('Ошибка запроса: ', err);
-      })
-      .finally(() => setLoading(false));
-  }, [row?.id]);
-
-  const handleChange = (field) => (e) => {
-    setPartnerData((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const handleSave = () => {
-    // логика сохранения
-  };
-
-  const handleAddLeads = () => {
-    // логика добавления
-  };
-
-  const handleUpdateLeads = () => {
-    // логика обновления
-  };
-
-  const handleDelete = () => {
-    // логика удаления
-  };
+  // Объединённые состояния загрузки/ошибки
+  if (isBrokerLoading || isManagersLoading) return <p>Загрузка...</p>;
+  if (brokerError || managersError) return <p>Ошибка при загрузке данных</p>;
 
   return (
     <div>
-      {loading ? (
-        <p>Загрузка...</p>
-      ) : (
-        <>
-          <h2 className="text-xl font-bold mb-4">Партнёр</h2>
+      <h2 className="text-xl text-center font-bold mb-4">Broker</h2>
 
-          {/* Пример отображения части полей */}
-          {/* <Input
-            value={partnerData.name}
-            onChange={handleChange('name')}
-            placeholder="Name"
-          />
-          <Input
-            value={partnerData.email}
-            onChange={handleChange('email')}
-            placeholder="Email"
-          />
-          <Input
-            value={partnerData.comment}
-            onChange={handleChange('comment')}
-            placeholder="Comment"
-          />
-          <Input
-            value={partnerData.role}
-            onChange={handleChange('role')}
-            placeholder="Role"
-          /> */}
+      <div className="flex justify-between items-start gap-8 p-5">
+        <div className="w-2/3 gap-4">
+          <TextInput label="Id" value={brokerData.id} readOnly onChange={handleChange('id')} />
+          <TextInput label="Name" value={brokerData.name} onChange={handleChange('name')} />
+          <TextInput label="Comment" value={brokerData.comment} onChange={handleChange('comment')} />
 
-          <div className="grid grid-cols-2 gap-3 mb-4 mt-4">
-            <Button onClick={handleAddLeads} className="bg-indigo-600 hover:bg-indigo-700">
-              Add leads integration code
-            </Button>
-            <Button onClick={handleUpdateLeads} className="bg-yellow-600 hover:bg-yellow-700">
-              Update leads integration code
-            </Button>
-            <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
-              Save
-            </Button>
-            <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-              Delete
-            </Button>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Brand Manager</label>
+            <Select
+              styles={customStyles}
+              placeholder="Brand Manager"
+              options={brandManagers}
+              onChange={handleSelectChange('brand_manager')}
+            />
           </div>
-        </>
-      )}
+        </div>
+
+        <div className="w-1/3 flex p-4 pt-8 flex-col gap-4">
+          <Button variant="primary" onClick={handleSave}>Save</Button>
+          <Button variant="emerald" onClick={handleSave}>Add Leads</Button>
+          <Button variant="green" onClick={handleSave}>Update Leads</Button>
+          <Button variant="danger" onClick={handleDelete}>Delete</Button>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Partner;
+export default Broker;

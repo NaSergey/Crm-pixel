@@ -26,7 +26,7 @@ export async function apiRequest(url: string, body: any = null) {
         'Content-Type': 'application/json',
         'Auth-Token': getApiToken(),
     };
-    console.log('apiRequest', url, body, headers);
+    // console.log('apiRequest', url, body, headers);
     const method = body ? 'POST' : 'GET';
     
     const reqParam: RequestInit = {

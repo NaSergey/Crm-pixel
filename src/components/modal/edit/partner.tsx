@@ -4,55 +4,54 @@ import TextInput from '../../ui/select/textInput';
 import Select from 'react-select';
 import customStyles from '../../../style/reactSelectStyles';
 import { usePartnerData } from '../../../hook/usePartnerData';
-import { useManagersSelect } from '../../../hook/useManagerOptions';
-
 
 const Partner = ({ row, onClose }) => {
   const partnerId = row?.partner;
-
   const {
     partnerData,
+    managers,
     handleChange,
     handleSelectChange,
+    handleSave,
+    handleDelete,
     isLoading,
     error,
-  } = usePartnerData(partnerId);
+  } = usePartnerData(partnerId, onClose, ['PartnerData', 'PartnerManagers']);
 
-  const { data: managers, isLoading: isManagersLoading, error: managersError } = useManagersSelect(); // ← сюда перенеси
 
-  const handleSave = () => {
-    console.log('Сохраняем:', partnerData);
-  };
 
-  const handleDelete = () => {
-    console.log('Удаление');
-  };
+  if (isLoading) return <p>Загрузка...</p>;
+  if (error) return <p>Ошибка при загрузке данных</p>;
 
-  if (isLoading || isManagersLoading) return <p>Загрузка...</p>;
-  if (error || managersError) return <p>Ошибка при загрузке данных</p>;
 
   return (
     <div>
       <h2 className="text-xl text-center font-bold mb-4">Partner</h2>
-      <div className="grid grid-cols-2 gap-4 pt-5">
+      <div className="grid grid-cols-2 gap-4 pb-10 p-5">
         <TextInput label="Name" value={partnerData.name} onChange={handleChange('name')} />
         <TextInput label="Email" value={partnerData.email} readOnly />
         <TextInput label="Comment" value={partnerData.comment} onChange={handleChange('comment')} />
         <TextInput label="Partner token" value={partnerData.partner_token} readOnly />
-
         <div>
           <label className="block text-sm text-gray-600 mb-1">Manager</label>
           <Select
             styles={customStyles}
-            value={partnerData.manager}
+            placeholder="Manager"
             onChange={handleSelectChange('manager')}
             options={managers}
+            value={managers?.find(opt => opt.value === partnerData.manager)}
           />
         </div>
-        <TextInput label="Role" value={partnerData.role} readOnly />
+        <TextInput label="Role" value={ partnerData.role} readOnly />
+        <div className="col-span-2">
+          <TextInput
+            label="Change the password"
+            value={partnerData.password}
+            onChange={handleChange('password')}
+          />
+        </div>
       </div>
-
-      <div className="grid grid-cols-2 gap-3 mt-6">
+      <div className="grid grid-cols-2 gap-3">
         <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
           Save
         </Button>
@@ -63,6 +62,5 @@ const Partner = ({ row, onClose }) => {
     </div>
   );
 };
-
 
 export default Partner;
